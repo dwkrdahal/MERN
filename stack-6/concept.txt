@@ -1,0 +1,50 @@
+MERN 
+    MongodB
+    Express Js 
+    React js
+    Node
+
+bin-student 
+since2008 
+
+
+Server Side Script
+    - php, python, java, nodejs, express js
+
+Client Script 
+    - html,css, js, jquery, react, angular, veu, flutter, andoid, swift
+
+Client-Server Architecture 
+
+facebook.com
+
+Client 
+    - Request generator 
+
+Server 
+    - Responder 
+
+
+    js basics
+    Nodejs 
+    Express js 
+        API
+    MongodB
+    React
+
+
+Editor 
+    - VSCode 
+    - sublime text 
+    - Web Ide
+Terminal 
+    - git
+    Linux 
+        ubuntu
+Node js 
+postman / insomnia / thunderclient
+heroku 
+
+
+SPA 
+    Single Page Application
