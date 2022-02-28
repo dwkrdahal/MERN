@@ -4,7 +4,13 @@
 
 const http = require("http");
 
-const app = http.createServer();
+const app = http.createServer((req, res) => {
+    // console.log("Req: ", req);
+
+    console.log("Req method: ", req.method);
+    console.log("Req url: ", req.url);
+    res.end("Test");
+});
 
 app.listen(9000, 'localhost', (err) => {
     if (err) {
