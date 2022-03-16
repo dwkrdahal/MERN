@@ -1,21 +1,17 @@
 const express = require("express");
 const router = express.Router();
 
+const categoryController = require("../controllers/category.controllers");
+const catCtrl = new categoryController();
 
 router.route('/')
-    .post((req, res, next) => {
-
-    })
-    .get((req, res, next) => {
-
-    })
+    .post(catCtrl.createCategory)
+    .get(catCtrl.getAllCategories)
 
 router.route('/:id')
-    .patch((req, res, next) => {
+    .patch(catCtrl.updateCategoryById)
+    .delete(catCtrl.deleteCategoryById)
 
-    })
-    .delete((req, res, next) => {
-
-    })
+router.get("/:id/child", catCtrl.getChildrenByCatId)
 
 module.exports = router;

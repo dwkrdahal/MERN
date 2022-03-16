@@ -1,0 +1,57 @@
+SQL
+
+NoSQL
+    Not Only SQL
+
+
+CRUD
+
+    --> Create
+        - insertOne()
+        - insertMany()
+    --> Read
+        - find(filter)
+            - {}    => filters
+                e.g. id, =>
+                {
+                    _id: ObjectId("6231744c1cb03615e0ca6f16")
+                    email: "dwkrdahal@gmail.com"
+                }
+
+                e.g OR
+                {
+                    $or: [
+                        _id: ObjectId("6231744c1cb03615e0ca6f16")
+                        email: "dwkrdahal@gmail.com"
+                    ]
+                }
+            - {}    => Projection
+            - {}    => options
+        - findOne()
+    --> Update
+        - updateOne()
+        - updateMany()
+    --> Delete
+        - deleteOne()
+        - deleteMany()
+
+
+ODM
+    Object Document Modelling
+
+ORM
+    Object Relational Modelling/Mapping
+
+mVC
+    Model =>
+    table => write in plural form
+        e.g. users
+        model Name => is directly linked to db tables, name is always singular
+
+
+    table =>
+    colm_1  colm_2
+    row_1   row_1
+    row_2   row_2
+
+    ==> A dataset of a table is a instance of a amodel class
