@@ -1,6 +1,10 @@
 const express = require("express");
 const app = express();
 
+// process.env.MONGO_URL = "mongodb://localhost:27017";
+// process.env.DB_NAME = "stack-6";
+
+require("./db.init");
 
 const routes = require("./routes/index.routes");
 

@@ -8,6 +8,4 @@ router.post("/register", authCtrl.register);
 
 router.post("/logout", authCtrl.logout);
 
-router.get("/user/:id", authCtrl.getUserById);
-
 module.exports = router;

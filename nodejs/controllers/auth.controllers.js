@@ -3,12 +3,14 @@ const MongoClient = mongodb.MongoClient;
 
 const getSingleRow = require('../services/db.service');
 const { dbUrl, dbName } = require('../config/db.config');
+const User = require("../model/user.model");
 
 class AuthController {
     login = (req, res, next) => {
         // console.log("Process: ", process.env);
         //db connect
-        getSingleRow('users', {
+
+        User.findOne({
                 email: req.body.email,
                 password: req.body.password
             })
@@ -29,9 +31,44 @@ class AuthController {
     }
 
     register = (req, res, next) => {
-        res.json({
-            data: req.body
-        })
+        let data = req.body;
+
+        // find user existence
+        User.findOne({
+                email: data.email
+            })
+            .then((user) => {
+                if (user) {
+                    next({
+                        error: 400,
+                        msg: "Email address already exists"
+                    })
+                } else {
+                    let user = new User(data); // user model
+                    user.save()
+                        .then((ack) => {
+                            res.json({
+                                result: user,
+                                status: true,
+                                msg: "User Registered Successfully"
+                            })
+                        })
+                        .catch((err) => {
+                            res.status(404).json({
+                                result: err,
+                                status: false,
+                                msg: "Error while registering the user"
+                            })
+                        })
+                }
+            })
+            .catch((err) => {
+                next({
+                    status: 400,
+                    msg: "Error while registering users"
+                })
+            })
+
 
     }
 
@@ -39,9 +76,6 @@ class AuthController {
 
     }
 
-    getUserById = (req, res, next) => {
-        let id = req.params.id;
-    }
 }
 
 module.exports = AuthController;
