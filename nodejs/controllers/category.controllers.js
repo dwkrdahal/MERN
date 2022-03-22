@@ -1,13 +1,11 @@
 class categoryController {
     createCategory = (req, res, next) => {
-        // logic
+        res.json({
+            result: req.auth_user
+        })
     }
 
     getAllCategories = (req, res, next) => {
-        // logic
-    }
-
-    createCategory = (req, res, next) => {
         // logic
     }
 

@@ -3,6 +3,7 @@ const app = express();
 
 // process.env.MONGO_URL = "mongodb://localhost:27017";
 // process.env.DB_NAME = "stack-6";
+process.env.JWT_SECRET = "Mern-6";
 
 require("./db.init");
 
@@ -36,6 +37,7 @@ app.use((req, res, next) => {
 
 
 app.use((error, req, res, next) => {
+    console.log(error);
     let code = error.status || 500;
     let msg = error.msg || null;
 

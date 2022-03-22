@@ -7,13 +7,8 @@ const homeroutes = require('./home.routes');
 const categoryroutes = require('./category.routes');
 const productroutes = require('./product.routes');
 const userroutes = require('./user.routes');
+const isLoggedIn = require('../middleware/isLoggedIn.middleware');
 
-const isLoggedIn = (req, res, next) => {
-    // res.end();
-    // TODO : check the logged in status
-
-    next();
-}
 
 app.use('/', homeroutes);
 app.use('/auth', authroutes);

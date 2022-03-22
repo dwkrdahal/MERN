@@ -2,8 +2,15 @@ const mongodb = require("mongodb");
 const MongoClient = mongodb.MongoClient;
 
 const getSingleRow = require('../services/db.service');
-const { dbUrl, dbName } = require('../config/db.config');
+// const { dbUrl, dbName } = require('../config/db.config');
 const User = require("../model/user.model");
+const jwt = require("jsonwebtoken");
+
+const bcrypt = require("bcrypt");
+const generateToken = (payload) => {
+    const token = jwt.sign(payload, process.env.JWT_SECRET);
+    return token;
+}
 
 class AuthController {
     login = (req, res, next) => {
@@ -12,14 +19,41 @@ class AuthController {
 
         User.findOne({
                 email: req.body.email,
-                password: req.body.password
+                // password: req.body.password
             })
             .then((response) => {
-                res.json({
-                    result: response,
-                    status: 200,
-                    msg: "Login Successful"
-                })
+                if (response) {
+
+
+                    if (bcrypt.compareSync(req.body.password, response.password)) {
+                        res.json({
+                            // generating token
+                            result: {
+                                user: response,
+                                token: generateToken({
+                                    user_id: response._id,
+                                    name: response.name,
+                                    email: response.email,
+                                    role: response.role,
+                                    status: response.status
+                                })
+                            },
+                            status: 200,
+                            msg: "Login Successful"
+                        })
+                    } else {
+                        next({
+                            status: 400,
+                            msg: "Credentials doesnot match"
+                        })
+                    }
+
+                } else {
+                    next({
+                        status: 400,
+                        msg: "User doesnot exists"
+                    })
+                }
             })
             .catch((error) => {
                 next({
@@ -44,6 +78,10 @@ class AuthController {
                         msg: "Email address already exists"
                     })
                 } else {
+                    // password encrypt
+                    let hashPass = bcrypt.hashSync(data.password, 10);
+                    data.password = hashPass;
+
                     let user = new User(data); // user model
                     user.save()
                         .then((ack) => {
