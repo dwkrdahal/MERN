@@ -1,25 +1,17 @@
 const router = require("express").Router();
-
-/// post, http://domain/product/
+const ProductController = require("../controllers/product.controller");
+const prodCtrl = new ProductController;
+const upload = require("../middleware/uploader.middleware");
+const isLoggedIn = require('../middleware/isLoggedIn.middleware');
 
 router.route('/')
-    .post((req, res, next) => {
-        // logic
-    })
-    .get((req, res, next) => {
-        // logic
-    });
+    .post(upload.array('image'), isLoggedIn, prodCtrl.addProduct)
+    .get(prodCtrl.getAllProducts);
 
 router.route('/:id')
-    .patch((req, res, next) => {
-        // logic
-    })
-    .delete((req, res, next) => {
-        // logic
-    })
-    .get((req, res, next) => {
-        // logic
-    });
+    .patch(upload.array('image'), prodCtrl.editProduct)
+    .delete(prodCtrl.deleteProductById)
+    .get(prodCtrl.getAllProducts);
 
 
 module.exports = router;

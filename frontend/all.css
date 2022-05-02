@@ -1,0 +1,25 @@
+#first_title {
+    background-color: #00FFFF;
+    color: #000000;
+}
+.first_class{
+    text-align: justify;
+    font-style: italic;
+}
+
+.first_class {
+    font-style: normal;
+    padding: 10px;
+}
+
+.first_col {
+    width: 50%;
+    float: left;
+    background-color: aliceblue;
+}
+
+.second_col{
+    width: 50%;
+    float: right;
+    background-color: azure;
+}

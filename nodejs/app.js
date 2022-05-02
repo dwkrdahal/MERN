@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const cors = require("cors");
 
 // process.env.MONGO_URL = "mongodb://localhost:27017";
 // process.env.DB_NAME = "stack-6";
@@ -8,6 +9,9 @@ process.env.JWT_SECRET = "Mern-6";
 require("./db.init");
 
 const routes = require("./routes/index.routes");
+
+// to enable cors policy
+app.use(cors());
 
 app.set('view engine', 'pug');
 app.set('view', process.cwd() + '/views')
@@ -48,7 +52,9 @@ app.use((error, req, res, next) => {
     });
 });
 
-app.listen(9005, 'localhost', (err) => {
+app.set("PORT", 9005);
+
+app.listen(app.get("PORT"), 'localhost', (err) => {
     if (!err) {
         console.log("Listening to port 9005")
     } else {

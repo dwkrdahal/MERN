@@ -1,16 +1,17 @@
 const express = require("express");
 const router = express.Router();
-const { isAdmin } = require('../middleware/rbac.middleware')
+const { isAdmin, isAdminSeller } = require('../middleware/rbac.middleware')
 
 
 const categoryController = require("../controllers/category.controllers");
 const catCtrl = new categoryController();
 
 router.route('/')
-    .post(isAdmin, catCtrl.createCategory)
+    .post(isAdminSeller, catCtrl.createCategory)
     .get(catCtrl.getAllCategories)
 
 router.route('/:id')
+    .get(catCtrl.getCategoryById)
     .patch(catCtrl.updateCategoryById)
     .delete(catCtrl.deleteCategoryById)
 
