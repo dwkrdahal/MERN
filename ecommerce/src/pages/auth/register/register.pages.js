@@ -1,8 +1,9 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
-import { Container, Row, Col, Form, Button, InputGroup } from "react-bootstrap";
+import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import "react-toastify/dist/ReactToastify.css";
+import {useNavigate} from "react-router-dom";
+import { uploader } from "../../../service/axios.service";
 
 let defaultState = {
     name: '',
@@ -23,12 +24,11 @@ let defaultState = {
     }
 }
 
+class RegisterPageComponent extends React.Component {
 
-export class RegisterPage extends React.Component {
 
-
-    constructor() {
-        super()
+    constructor(props) {
+        super(props)
         this.state = {
             validated: false,
             data: defaultState,
@@ -48,25 +48,19 @@ export class RegisterPage extends React.Component {
                 validated: true
             }) 
         } else {
-            //ready to submit the form.
-            const xhr = XMLHttpRequest();
-            const formData = new FormData();
-
-            if(this.state.uploadImage){
-                let image = this.state.uploadImage;
-                formData.append("image", image, image.name)
-            }
-
-            for(let item of this.state.data){
-                formData.append(item, this.state.data(item));
-            }
-
-            const onStateChange = (response) => {
-
-            }
-
-            xhr.open('post', 'http://9005/auth/register');
-            xhr.send(formData);
+           uploader('post', 'auth/register', this.state.data, [this.state.uploadImage] )
+           .then((success) => {
+                if(success.status){
+                    toast.success(success.msg);
+                    this.props.navigate('/login');
+                } else{
+                    toast.error(success.msg)
+                }
+            })
+           .catch((error) => {
+               toast.error("Error! Try Again")
+               console.log(error);
+           })
         }
     }
 
@@ -74,10 +68,10 @@ export class RegisterPage extends React.Component {
         let { value, name, type, files } = ev.target;
 
         if(type == 'file'){
-            let images=[];
-            for(let image of files){
-                images.push(image);
-            }
+            // let images=[];
+            // for(let image of files){
+            //     images.push(image);
+            // }
             this.setState((pre) => {
                 return {
                     ...pre,
@@ -97,11 +91,11 @@ export class RegisterPage extends React.Component {
                 }
             }
         }, () => {
-            this.validateData(name);
+            this.validateData(name, value);
         })
     }
 
-    validateData = (field) => {
+    validateData = (field, value) => {
         //
         let data = this.state.data;
         let errMsg = '';
@@ -110,12 +104,20 @@ export class RegisterPage extends React.Component {
             case "role":
                 errMsg = data['role'] != "customer" || data['role'] != "seller" ? 'Role is either seller or customer' : '   ';
                 break;
+                
+            case "password": 
+                errMsg = value ? (value.length  < 8 ? 'Password must be atleast 8 characters' : '') : 'Password is required';
+                break;
+
+            case "confirm_password":
+                errMsg = data['confirm_password'] ? ( data['password'] != data['confirm_password'] ? 'Password doesnot match' : '') : 'Required field';
+
         }
 
         this.setState((pre) => {
             return {
                 ...pre,
-                validated: true,
+                // validated: true,
                 error: {
                     [field]: errMsg
                 }
@@ -182,13 +184,13 @@ export class RegisterPage extends React.Component {
                                         onChange={this.handleChange}
                                         size="sm"
                                         name="password"
-                                        required
+                                        
                                         type="password"
                                         placeholder="Password"
                                         defaultValue=""
                                     />
                                     <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                                    <Form.Control.Feedback type="invalid">Password must be atleast 8 characters</Form.Control.Feedback>
+                                    <Form.Control.Feedback type="invalid">{this.state.error['password']}</Form.Control.Feedback>
                                 </Form.Group>
                             </Row>
 
@@ -205,7 +207,7 @@ export class RegisterPage extends React.Component {
                                         defaultValue=""
                                     />
                                     <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                                    <Form.Control.Feedback type="invalid">Password doesnot match</Form.Control.Feedback>
+                                    <Form.Control.Feedback type="invalid">{this.state.error['confirm_password']}</Form.Control.Feedback>
                                 </Form.Group>
                             </Row>
 
@@ -279,7 +281,7 @@ export class RegisterPage extends React.Component {
                                         size="sm"
                                         onChange={this.handleChange}
                                         type="number"
-                                        name="shipping[ward]"
+                                        name="address[shipping[ward]]"
                                         placeholder="Ward No."
                                         required
                                     />
@@ -296,15 +298,15 @@ export class RegisterPage extends React.Component {
                                         size="sm"
                                         onChange={this.handleChange}
                                         type="file"
-                                        name="images[]"     
-                                        multiple                               
+                                        name="image"     
                                     />
                                 </Form.Group>
 
-                                <Col className="mb-1" md="3">
-                                    {
-                                        this.state.uploadImage ? <img className="img img-fluid" src = {URL.createObjectURL(this.state.uploadImage)}img></img> : ''
-                                    }
+                                <Col md="3">
+                                {
+                                    this.state.uploadImage ? <img className="img img-fluid" src={URL.createObjectURL(this.state.uploadImage)}></img> : ''
+                                }
+
                                 </Col>
                             </Row>
 
@@ -319,4 +321,11 @@ export class RegisterPage extends React.Component {
         </>)
     }
 
+}
+
+export function RegisterPage(){
+    let navigate =useNavigate();
+    return(
+        <RegisterPageComponent navigate = {navigate}>  </RegisterPageComponent>
+    )
 }

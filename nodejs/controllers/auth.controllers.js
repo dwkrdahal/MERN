@@ -67,6 +67,10 @@ class AuthController {
     register = (req, res, next) => {
         let data = req.body;
 
+        if(req.files){
+            data.image = req.files[0].filename;
+        }
+
         // find user existence
         User.findOne({
                 email: data.email
